@@ -18,7 +18,7 @@ Quickly convert UTC datetimes in your Supabase tables to multiple timezones, wit
 
 ### From Chrome Web Store (Recommended)
 
-_Once published, you will be able to install Supasync directly from the Chrome Web Store._ (Link will be added here)
+_Pending_
 
 ### Manual Installation (for development or testing)
 
