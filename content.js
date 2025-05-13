@@ -92,6 +92,34 @@ if (isSupabaseTableView()) {
   console.log("Not a Supabase table view. MutationObserver for selected cells not started.");
 }
 
+// Helper function to highlight differences between two YYYY-MM-DDTHH:mm:ss strings
+function highlightDiff(baseTime, convertedTime) {
+    const highlightStyle = 'color: #FFFF00; font-weight: bold;'; // Yellow, bold
+    let resultHtml = '';
+
+    const segments = [
+        { start: 0, end: 4, separator: '-' },  // YYYY
+        { start: 5, end: 7, separator: '-' },  // MM
+        { start: 8, end: 10, separator: 'T' }, // DD
+        { start: 11, end: 13, separator: ':' },// HH
+        { start: 14, end: 16, separator: ':' },// mm
+        { start: 17, end: 19, separator: '' }   // ss
+    ];
+
+    for (const segment of segments) {
+        const baseSegment = baseTime.substring(segment.start, segment.end);
+        const convertedSegment = convertedTime.substring(segment.start, segment.end);
+
+        if (baseSegment !== convertedSegment) {
+            resultHtml += `<span style="${highlightStyle}">${convertedSegment}</span>`;
+        } else {
+            resultHtml += convertedSegment;
+        }
+        resultHtml += segment.separator;
+    }
+    return resultHtml;
+}
+
 const RESULTS_PANEL_ID = 'supabase-tz-converter-results-panel';
 
 function removeResultsPanel() {
@@ -128,7 +156,8 @@ function displayConversionResults(data, cellElement, originalText) {
     if (index > 0) { // Add top border to all but the first item
       borderStyle = "border-top: 1px solid #4a4a4a;";
     }
-    content += `<li style="${listItemStyle} ${alternateRowStyle} ${borderStyle}">${conv.label}: ${conv.time}</li>`;
+    const highlightedTime = highlightDiff(formattedUtc, conv.time);
+    content += `<li style="${listItemStyle} ${alternateRowStyle} ${borderStyle}">${conv.label}: ${highlightedTime}</li>`;
   });
   content += `</ul>`;
   panel.innerHTML = content;
