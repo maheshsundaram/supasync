@@ -5,9 +5,9 @@ console.log("Supabase Timezone Converter content script loaded.");
 function isSupabaseTableView() {
   // Basic check: Supabase table editor URLs typically look like:
   // https://app.supabase.com/project/{project_id}/editor/table/{table_id}
-  // or similar for self-hosted instances.
-  // This regex looks for '/editor/table/' in the path.
-  const supabaseTablePattern = /\/editor\/table\//i;
+  // or similar for self-hosted instances, e.g., https://supabase.com/dashboard/project/{project_id}/editor/{table_id}
+  // This regex looks for '/project/{project_id}/editor/{table_id}' in the path.
+  const supabaseTablePattern = /\/project\/[^\/]+\/editor\/[^\/]+/i;
   return supabaseTablePattern.test(window.location.href);
 }
 
