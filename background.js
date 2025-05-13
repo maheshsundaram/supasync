@@ -5,9 +5,10 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "convertToTimezone",
     title: "Convert Supabase DateTime",
-    contexts: ["selection"] // Show only when text is selected
+    contexts: ["selection"], // Show only when text is selected
+    documentUrlPatterns: ["*://*.supabase.com/*", "*://*.supabase.co/*"] // Only on Supabase pages
   });
-  console.log("Context menu created for selection.");
+  console.log("Context menu created for selection on Supabase pages.");
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
