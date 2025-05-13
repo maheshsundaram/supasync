@@ -107,16 +107,17 @@ function displayConversionResults(data, cellElement, originalText) {
   const panel = document.createElement('div');
   panel.id = RESULTS_PANEL_ID;
   panel.style.position = 'absolute';
-  panel.style.border = '1px solid #ccc';
-  panel.style.background = '#fff';
+  panel.style.border = '1px solid #555'; // Darker border
+  panel.style.background = '#333'; // Dark background
+  panel.style.color = '#f0f0f0'; // Light text
   panel.style.padding = '10px';
   panel.style.zIndex = '10000'; // Ensure it's on top
   panel.style.fontSize = '12px';
   panel.style.fontFamily = 'sans-serif';
-  panel.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+  panel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)'; // Adjusted shadow for dark theme
   panel.style.borderRadius = '4px';
 
-  let content = `<strong>Original (${originalText}):</strong> ${data.originalUtc}<br><hr style="margin: 5px 0;">`;
+  let content = `<strong>Original (${originalText}):</strong> ${data.originalUtc}<br><hr style="margin: 5px 0; border-color: #666;">`; // Darker hr
   content += `<strong>Converted Times:</strong><ul>`;
   data.conversions.forEach(conv => {
     content += `<li style="list-style-type: none; margin-left: 0; padding-left: 0;">${conv.label}: ${conv.time}</li>`;
