@@ -99,12 +99,12 @@ function highlightDiff(baseTimeString, convertedTimeString) {
     const baseDate = new Date(baseTimeString);
     const convertedDate = new Date(convertedTimeString);
 
-    let highlightColorStyle = 'color: #FFFF00;'; // Default to Yellow (e.g., if times are identical)
+    let highlightColorStyle = 'color: #FFD700;'; // Gold/Darker Yellow
 
     if (convertedDate.getTime() > baseDate.getTime()) {
-        highlightColorStyle = 'color: #00FF00;'; // Green for positive delta (converted time is later)
+        highlightColorStyle = 'color: #50C878;'; // Emerald Green (toned down)
     } else if (convertedDate.getTime() < baseDate.getTime()) {
-        highlightColorStyle = 'color: #FF0000;'; // Red for negative delta (converted time is earlier)
+        highlightColorStyle = 'color: #D22B2B;'; // Fire Engine Red (toned down)
     }
 
     const highlightStyle = `${highlightColorStyle} font-weight: bold;`;
@@ -153,15 +153,15 @@ function displayConversionResults(data, cellElement, originalText) {
   panel.style.color = '#f0f0f0'; // Light text
   panel.style.padding = '10px';
   panel.style.zIndex = '10000'; // Ensure it's on top
-  panel.style.fontSize = '12px';
+  panel.style.fontSize = '13px'; // Increased base font size
   panel.style.fontFamily = 'sans-serif';
   panel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)'; // Adjusted shadow for dark theme
   panel.style.borderRadius = '4px';
 
   // Display UTC time formatted as YYYY-MM-DDTHH:mm:ss
   const formattedUtc = data.originalUtc.slice(0, 19);
-  let content = `<div style="margin-bottom: 5px;"><strong>UTC:</strong> ${formattedUtc}</div>`;
-  content += `<table style="width: 100%; border-collapse: collapse; font-size: 11px;">`; // Slightly smaller font for table
+  let content = `<div style="margin-bottom: 5px; font-size: 1.1em;"><strong>UTC:</strong> ${formattedUtc}</div>`; // Slightly larger UTC display
+  content += `<table style="width: 100%; border-collapse: collapse;">`; // Table will inherit panel font size or use its own slightly adjusted
   content += `
     <thead style="text-align: left;">
       <tr>
