@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Supabase Timezone Converter",
+  "name": "Supasync",
   "version": "0.1.0",
   "description": "Converts UTC datetimes in Supabase table view to user-selected timezones.",
   "author": "Mahesh Sundaram",
