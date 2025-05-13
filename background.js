@@ -49,9 +49,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     // Example timezones - these will later come from user preferences
     const targetTimezones = [
+      { tz: "Pacific/Honolulu", label: "Honolulu" },
+      { tz: "America/Los_Angeles", label: "San Francisco" },
+      { tz: "America/Cancun", label: "Cancun" },
+      { tz: "America/Chicago", label: "Chicago" },
       { tz: "America/New_York", label: "New York" },
-      { tz: "Europe/London", label: "London" },
-      { tz: "Asia/Tokyo", label: "Tokyo" }
+      { tz: "Asia/Karachi", label: "Lahore" }
     ];
 
     const conversions = targetTimezones.map(tzInfo => {
