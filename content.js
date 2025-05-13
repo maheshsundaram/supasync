@@ -38,27 +38,40 @@ function attemptToParseDate(text) {
 }
 
 if (isSupabaseTableView()) {
-  console.log("Supabase table view detected. Listening for clicks on potential datetime cells.");
+  console.log("Supabase table view detected. Observing for selected datetime cells.");
 
-  document.addEventListener('click', (event) => {
-    // Try to find the closest parent cell that is a gridcell and is selected
-    const selectedCell = event.target.closest('[role="gridcell"][aria-selected="true"]');
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'aria-selected') {
+        const cellElement = mutation.target;
+        // Ensure it's a gridcell and is now selected
+        if (cellElement.getAttribute('role') === 'gridcell' && cellElement.getAttribute('aria-selected') === 'true') {
+          if (cellElement.textContent) {
+            const textContent = cellElement.textContent.trim();
+            const parsedDate = attemptToParseDate(textContent);
 
-    if (selectedCell && selectedCell.textContent) {
-      const textContent = selectedCell.textContent.trim();
-      const parsedDate = attemptToParseDate(textContent);
-
-      if (parsedDate) {
-        console.log("Selected datetime cell detected. Parsed date (UTC):", parsedDate.toISOString(), "Original text:", textContent);
-        console.log("Cell element:", selectedCell);
-        // Next step: Show custom UI element near/on this 'selectedCell' for conversion.
-      } else {
-        // Optional: log if a selected cell was clicked but not a date
-        // console.log("Selected cell is not a parsable date:", textContent);
+            if (parsedDate) {
+              console.log("Selected datetime cell detected (via MutationObserver). Parsed date (UTC):", parsedDate.toISOString(), "Original text:", textContent);
+              console.log("Cell element:", cellElement);
+              // Next step: Show custom UI element near/on this 'selectedCell' for conversion.
+            } else {
+              // Optional: log if a selected cell was clicked but not a date
+              // console.log("Selected cell (via MutationObserver) is not a parsable date:", textContent);
+            }
+          }
+        }
       }
     }
-  }, true); // Use capture phase
+  });
+
+  // Start observing the document element and its descendants for attribute changes.
+  // We filter for 'aria-selected' to be more efficient.
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['aria-selected'],
+    subtree: true
+  });
 
 } else {
-  console.log("Not a Supabase table view. Click listener for selected cells not added.");
+  console.log("Not a Supabase table view. MutationObserver for selected cells not started.");
 }
