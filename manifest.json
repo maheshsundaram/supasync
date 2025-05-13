@@ -3,7 +3,7 @@
   "name": "Supabase Timezone Converter",
   "version": "0.1.0",
   "description": "Converts UTC datetimes in Supabase table view to user-selected timezones.",
-  "author": "Your Name or Organization",
+  "author": "Mahesh Sundaram",
   "icons": {
     "16": "icon16.png",
     "32": "icon32.png",
