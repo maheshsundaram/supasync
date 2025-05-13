@@ -41,18 +41,24 @@ if (isSupabaseTableView()) {
   console.log("Supabase table view detected. Listening for clicks on potential datetime cells.");
 
   document.addEventListener('click', (event) => {
-    const clickedElement = event.target;
-    if (clickedElement && clickedElement.textContent) {
-      const textContent = clickedElement.textContent.trim();
+    // Try to find the closest parent cell that is a gridcell and is selected
+    const selectedCell = event.target.closest('[role="gridcell"][aria-selected="true"]');
+
+    if (selectedCell && selectedCell.textContent) {
+      const textContent = selectedCell.textContent.trim();
       const parsedDate = attemptToParseDate(textContent);
 
       if (parsedDate) {
-        console.log("Clicked on potential datetime cell. Parsed date (UTC):", parsedDate.toISOString(), "Original text:", textContent);
-        // Next step: Trigger UI for conversion (e.g., show a small button or send to background for popup)
+        console.log("Selected datetime cell detected. Parsed date (UTC):", parsedDate.toISOString(), "Original text:", textContent);
+        console.log("Cell element:", selectedCell);
+        // Next step: Show custom UI element near/on this 'selectedCell' for conversion.
+      } else {
+        // Optional: log if a selected cell was clicked but not a date
+        // console.log("Selected cell is not a parsable date:", textContent);
       }
     }
-  }, true); // Use capture phase to catch clicks early, might be useful for complex UIs
+  }, true); // Use capture phase
 
 } else {
-  console.log("Not a Supabase table view. Click listener not added.");
+  console.log("Not a Supabase table view. Click listener for selected cells not added.");
 }
