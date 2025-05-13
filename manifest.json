@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Supabase Timezone Converter",
+  "version": "0.1.0",
+  "description": "Converts UTC datetimes in Supabase table view to user-selected timezones.",
+  "permissions": [
+    "contextMenus",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
