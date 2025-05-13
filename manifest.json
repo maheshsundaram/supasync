@@ -9,5 +9,11 @@
   ],
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.supabase.com/*", "*://*.supabase.co/*"],
+      "js": ["content.js"]
+    }
+  ]
 }
