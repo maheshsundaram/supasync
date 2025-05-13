@@ -51,9 +51,23 @@ if (isSupabaseTableView()) {
             const parsedDate = attemptToParseDate(textContent);
 
             if (parsedDate) {
-              console.log("Selected datetime cell detected (via MutationObserver). Parsed date (UTC):", parsedDate.toISOString(), "Original text:", textContent);
+              const dateISOString = parsedDate.toISOString();
+              console.log("Selected datetime cell detected (via MutationObserver). Parsed date (UTC):", dateISOString, "Original text:", textContent);
               console.log("Cell element:", cellElement);
-              // Next step: Show custom UI element near/on this 'selectedCell' for conversion.
+
+              // Send the parsed date to the background script for conversion
+              chrome.runtime.sendMessage({
+                type: "convertTime",
+                dateString: dateISOString,
+                originalText: textContent
+              }, (response) => {
+                if (chrome.runtime.lastError) {
+                  console.error("Error sending message to background:", chrome.runtime.lastError.message);
+                } else if (response) {
+                  console.log("Response from background script:", response);
+                  // Next step: Display these converted times in the UI
+                }
+              });
             } else {
               // Optional: log if a selected cell was clicked but not a date
               // console.log("Selected cell (via MutationObserver) is not a parsable date:", textContent);

@@ -35,4 +35,44 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-console.log("Background script loaded and listeners set up.");
+// Listen for messages from content scripts
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "convertTime" && request.dateString) {
+    console.log("Background: Received date to convert:", request.dateString);
+    const originalDate = new Date(request.dateString);
+
+    if (isNaN(originalDate.getTime())) {
+      console.error("Background: Invalid date string received:", request.dateString);
+      sendResponse({ error: "Invalid date string" });
+      return true; // Indicates asynchronous response
+    }
+
+    // Example timezones - these will later come from user preferences
+    const targetTimezones = [
+      { tz: "America/New_York", label: "New York" },
+      { tz: "Europe/London", label: "London" },
+      { tz: "Asia/Tokyo", label: "Tokyo" }
+    ];
+
+    const conversions = targetTimezones.map(tzInfo => {
+      try {
+        return {
+          label: tzInfo.label,
+          time: originalDate.toLocaleString("en-US", { timeZone: tzInfo.tz, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        };
+      } catch (e) {
+        console.error(`Background: Error converting to timezone ${tzInfo.tz}:`, e);
+        return { label: tzInfo.label, time: "Error" };
+      }
+    });
+
+    console.log("Background: Original UTC:", originalDate.toISOString());
+    console.log("Background: Conversions:", conversions);
+
+    sendResponse({ status: "success", originalUtc: originalDate.toISOString(), conversions: conversions });
+    return true; // Indicates asynchronous response
+  }
+  return true; // Keep channel open for other message types if any
+});
+
+console.log("Background script loaded and listeners set up, including message listener.");
