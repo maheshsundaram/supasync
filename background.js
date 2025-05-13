@@ -5,19 +5,32 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "convertToTimezone",
     title: "Convert Supabase DateTime",
-    contexts: ["selection", "page"] // Show for selected text and on the page
+    contexts: ["selection"] // Show only when text is selected
   });
-  console.log("Context menu created.");
+  console.log("Context menu created for selection.");
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "convertToTimezone") {
-    // Placeholder for conversion logic
-    console.log("Context menu item clicked!");
-    console.log("Selected text:", info.selectionText);
-    console.log("Page URL:", info.pageUrl);
-    // In a real scenario, we'd send a message to a content script
-    // or open a popup with the selected text.
+    console.log("Context menu item 'convertToTimezone' clicked.");
+    const selectedText = info.selectionText;
+    if (selectedText) {
+      console.log("Selected text:", selectedText);
+      try {
+        const date = new Date(selectedText);
+        if (isNaN(date.getTime())) {
+          console.error("Failed to parse selected text as a valid date:", selectedText);
+        } else {
+          console.log("Successfully parsed date:", date.toISOString());
+          // Next step will be to convert this date to a selected timezone.
+        }
+      } catch (error) {
+        console.error("Error parsing date from selected text:", selectedText, error);
+      }
+    } else {
+      console.log("No text selected.");
+    }
+    // console.log("Page URL:", info.pageUrl); // Still available if needed
   }
 });
 
