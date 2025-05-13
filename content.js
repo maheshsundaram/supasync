@@ -63,9 +63,11 @@ if (isSupabaseTableView()) {
               }, (response) => {
                 if (chrome.runtime.lastError) {
                   console.error("Error sending message to background:", chrome.runtime.lastError.message);
-                } else if (response) {
+                } else if (response && response.status === "success") {
                   console.log("Response from background script:", response);
-                  // Next step: Display these converted times in the UI
+                  displayConversionResults(response, cellElement, textContent);
+                } else if (response) {
+                  console.error("Received error or unexpected response from background:", response);
                 }
               });
             } else {
@@ -88,4 +90,62 @@ if (isSupabaseTableView()) {
 
 } else {
   console.log("Not a Supabase table view. MutationObserver for selected cells not started.");
+}
+
+const RESULTS_PANEL_ID = 'supabase-tz-converter-results-panel';
+
+function removeResultsPanel() {
+  const existingPanel = document.getElementById(RESULTS_PANEL_ID);
+  if (existingPanel) {
+    existingPanel.remove();
+  }
+}
+
+function displayConversionResults(data, cellElement, originalText) {
+  removeResultsPanel(); // Remove any existing panel
+
+  const panel = document.createElement('div');
+  panel.id = RESULTS_PANEL_ID;
+  panel.style.position = 'absolute';
+  panel.style.border = '1px solid #ccc';
+  panel.style.background = '#fff';
+  panel.style.padding = '10px';
+  panel.style.zIndex = '10000'; // Ensure it's on top
+  panel.style.fontSize = '12px';
+  panel.style.fontFamily = 'sans-serif';
+  panel.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+  panel.style.borderRadius = '4px';
+
+  let content = `<strong>Original (${originalText}):</strong> ${data.originalUtc}<br><hr style="margin: 5px 0;">`;
+  content += `<strong>Converted Times:</strong><ul>`;
+  data.conversions.forEach(conv => {
+    content += `<li style="list-style-type: none; margin-left: 0; padding-left: 0;">${conv.label}: ${conv.time}</li>`;
+  });
+  content += `</ul>`;
+  panel.innerHTML = content;
+
+  // Position the panel near the cell
+  const rect = cellElement.getBoundingClientRect();
+  panel.style.top = `${window.scrollY + rect.bottom + 5}px`; // 5px below the cell
+  panel.style.left = `${window.scrollX + rect.left}px`;
+
+  document.body.appendChild(panel);
+
+  // Add a listener to remove the panel when clicking outside
+  // Use a timeout to prevent immediate removal by the same click that triggered it
+  setTimeout(() => {
+    document.addEventListener('click', handleClickOutsidePanel, { once: true, capture: true });
+  }, 0);
+}
+
+function handleClickOutsidePanel(event) {
+  const panel = document.getElementById(RESULTS_PANEL_ID);
+  // If the click is outside the panel, remove it
+  if (panel && !panel.contains(event.target)) {
+    removeResultsPanel();
+  } else if (panel) {
+    // If click was inside, re-add listener for next click
+    // This handles cases where user interacts with panel content (if we add any later)
+    document.addEventListener('click', handleClickOutsidePanel, { once: true, capture: true });
+  }
 }
