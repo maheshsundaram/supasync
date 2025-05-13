@@ -59,9 +59,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     const conversions = targetTimezones.map(tzInfo => {
       try {
+        const options = {
+          timeZone: tzInfo.tz,
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        };
+        // 'sv-SE' locale typically formats as YYYY-MM-DD HH:MM:SS
+        const formattedTime = new Intl.DateTimeFormat('sv-SE', options).format(originalDate);
         return {
           label: tzInfo.label,
-          time: originalDate.toLocaleString("en-US", { timeZone: tzInfo.tz, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+          time: formattedTime.replace(' ', 'T') // Replace space with T for desired format
         };
       } catch (e) {
         console.error(`Background: Error converting to timezone ${tzInfo.tz}:`, e);

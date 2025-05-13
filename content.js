@@ -117,7 +117,9 @@ function displayConversionResults(data, cellElement, originalText) {
   panel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)'; // Adjusted shadow for dark theme
   panel.style.borderRadius = '4px';
 
-  let content = `<strong>Original (${originalText}):</strong> ${data.originalUtc}<br><hr style="margin: 5px 0; border-color: #666;">`; // Darker hr
+  // Display UTC time formatted as YYYY-MM-DDTHH:mm:ss
+  const formattedUtc = data.originalUtc.slice(0, 19);
+  let content = `<strong>UTC:</strong> ${formattedUtc}<br><hr style="margin: 5px 0; border-color: #666;">`; // Darker hr
   content += `<strong>Converted Times:</strong><ul>`;
   data.conversions.forEach(conv => {
     content += `<li style="list-style-type: none; margin-left: 0; padding-left: 0;">${conv.label}: ${conv.time}</li>`;
