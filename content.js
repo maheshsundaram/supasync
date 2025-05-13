@@ -93,8 +93,21 @@ if (isSupabaseTableView()) {
 }
 
 // Helper function to highlight differences between two YYYY-MM-DDTHH:mm:ss strings
-function highlightDiff(baseTime, convertedTime) {
-    const highlightStyle = 'color: #FFFF00; font-weight: bold;'; // Yellow, bold
+function highlightDiff(baseTimeString, convertedTimeString) {
+    // Parse the time strings to Date objects to determine overall delta
+    // Assumes YYYY-MM-DDTHH:MM:SS format which Date constructor handles
+    const baseDate = new Date(baseTimeString);
+    const convertedDate = new Date(convertedTimeString);
+
+    let highlightColorStyle = 'color: #FFFF00;'; // Default to Yellow (e.g., if times are identical)
+
+    if (convertedDate.getTime() > baseDate.getTime()) {
+        highlightColorStyle = 'color: #00FF00;'; // Green for positive delta (converted time is later)
+    } else if (convertedDate.getTime() < baseDate.getTime()) {
+        highlightColorStyle = 'color: #FF0000;'; // Red for negative delta (converted time is earlier)
+    }
+
+    const highlightStyle = `${highlightColorStyle} font-weight: bold;`;
     let resultHtml = '';
 
     const segments = [
@@ -107,13 +120,13 @@ function highlightDiff(baseTime, convertedTime) {
     ];
 
     for (const segment of segments) {
-        const baseSegment = baseTime.substring(segment.start, segment.end);
-        const convertedSegment = convertedTime.substring(segment.start, segment.end);
+        const baseSegmentValue = baseTimeString.substring(segment.start, segment.end);
+        const convertedSegmentValue = convertedTimeString.substring(segment.start, segment.end);
 
-        if (baseSegment !== convertedSegment) {
-            resultHtml += `<span style="${highlightStyle}">${convertedSegment}</span>`;
+        if (baseSegmentValue !== convertedSegmentValue) {
+            resultHtml += `<span style="${highlightStyle}">${convertedSegmentValue}</span>`;
         } else {
-            resultHtml += convertedSegment;
+            resultHtml += convertedSegmentValue;
         }
         resultHtml += segment.separator;
     }
