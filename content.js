@@ -160,19 +160,32 @@ function displayConversionResults(data, cellElement, originalText) {
 
   // Display UTC time formatted as YYYY-MM-DDTHH:mm:ss
   const formattedUtc = data.originalUtc.slice(0, 19);
-  let content = `<strong>UTC:</strong> ${formattedUtc}<br><hr style="margin: 5px 0; border-color: #555;">`; // Slightly adjusted hr
-  content += `<strong>Converted Times:</strong><ul style="padding-left: 0; margin-bottom: 0; list-style-type: none;">`; // Ensure list-style-type is none on ul
+  let content = `<div style="margin-bottom: 5px;"><strong>UTC:</strong> ${formattedUtc}</div>`;
+  content += `<table style="width: 100%; border-collapse: collapse; font-size: 11px;">`; // Slightly smaller font for table
+  content += `
+    <thead style="text-align: left;">
+      <tr>
+        <th style="padding: 3px 5px; border-bottom: 1px solid #666;">TZ</th>
+        <th style="padding: 3px 5px; border-bottom: 1px solid #666;">Datetime</th>
+        <th style="padding: 3px 5px; border-bottom: 1px solid #666;">Delta</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
   data.conversions.forEach((conv, index) => {
-    let listItemStyle = "margin-left: 0; padding: 4px 6px;"; // Increased padding
-    const alternateRowStyle = index % 2 === 0 ? "background-color: #2c2c2c;" : "background-color: #383838;"; // More distinct dark grays
-    let borderStyle = "";
-    if (index > 0) { // Add top border to all but the first item
-      borderStyle = "border-top: 1px solid #4a4a4a;";
-    }
+    const alternateRowStyle = index % 2 === 0 ? "background-color: #2c2c2c;" : "background-color: #383838;";
     const highlightedTime = highlightDiff(formattedUtc, conv.time);
-    content += `<li style="${listItemStyle} ${alternateRowStyle} ${borderStyle}">${conv.label}: ${highlightedTime}</li>`;
+    content += `
+      <tr style="${alternateRowStyle}">
+        <td style="padding: 3px 5px; border-bottom: 1px solid #4a4a4a;">${conv.label}</td>
+        <td style="padding: 3px 5px; border-bottom: 1px solid #4a4a4a;">${highlightedTime}</td>
+        <td style="padding: 3px 5px; border-bottom: 1px solid #4a4a4a;">${conv.delta}</td>
+      </tr>
+    `;
   });
-  content += `</ul>`;
+
+  content += `</tbody></table>`;
   panel.innerHTML = content;
 
   // Position the panel near the cell

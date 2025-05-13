@@ -57,8 +57,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       { tz: "Asia/Karachi", label: "Lahore" }
     ];
 
+// Helper function to get timezone offset string (e.g., "+5.5 hrs")
+function getDeltaString(dateObj, timeZone) {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone,
+      timeZoneName: 'longOffset', // e.g., GMT-07:00 or GMT+05:30
+    });
+    const parts = formatter.formatToParts(dateObj);
+    const offsetPart = parts.find(part => part.type === 'timeZoneName');
+
+    if (offsetPart && offsetPart.value) {
+      const offsetString = offsetPart.value; // e.g., "GMT-07:00"
+      // Regex to match GMT+H, GMT+H:MM, UTC+H, UTC+H:MM
+      const match = offsetString.match(/(?:GMT|UTC)([+-])(\d{1,2})(?::(\d{2}))?/i);
+      if (match) {
+        const sign = match[1];
+        const hours = parseInt(match[2], 10);
+        const minutes = match[3] ? parseInt(match[3], 10) : 0;
+        
+        let deltaDisplay = `${sign}${hours}`;
+        if (minutes === 30) {
+          deltaDisplay += ".5";
+        } else if (minutes > 0) { // For other fractional minutes, show as H:MM
+          deltaDisplay = `${sign}${hours}:${String(minutes).padStart(2, '0')}`;
+        }
+        return `${deltaDisplay} hrs`;
+      }
+    }
+  } catch (e) {
+    console.error("Error getting delta string for timezone:", timeZone, e);
+  }
+  return "N/A"; // Fallback if parsing fails
+}
+
     const conversions = targetTimezones.map(tzInfo => {
       try {
+        const delta = getDeltaString(originalDate, tzInfo.tz);
         const options = {
           timeZone: tzInfo.tz,
           year: 'numeric',
@@ -73,11 +108,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const formattedTime = new Intl.DateTimeFormat('sv-SE', options).format(originalDate);
         return {
           label: tzInfo.label,
-          time: formattedTime.replace(' ', 'T') // Replace space with T for desired format
+          time: formattedTime.replace(' ', 'T'), // Replace space with T for desired format
+          delta: delta
         };
       } catch (e) {
         console.error(`Background: Error converting to timezone ${tzInfo.tz}:`, e);
-        return { label: tzInfo.label, time: "Error" };
+        return { label: tzInfo.label, time: "Error", delta: "N/A" };
       }
     });
 
