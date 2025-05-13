@@ -119,12 +119,16 @@ function displayConversionResults(data, cellElement, originalText) {
 
   // Display UTC time formatted as YYYY-MM-DDTHH:mm:ss
   const formattedUtc = data.originalUtc.slice(0, 19);
-  let content = `<strong>UTC:</strong> ${formattedUtc}<br><hr style="margin: 5px 0; border-color: #666;">`; // Darker hr
-  content += `<strong>Converted Times:</strong><ul style="padding-left: 0; margin-bottom: 0;">`; // Reset ul padding
+  let content = `<strong>UTC:</strong> ${formattedUtc}<br><hr style="margin: 5px 0; border-color: #555;">`; // Slightly adjusted hr
+  content += `<strong>Converted Times:</strong><ul style="padding-left: 0; margin-bottom: 0; list-style-type: none;">`; // Ensure list-style-type is none on ul
   data.conversions.forEach((conv, index) => {
-    const listItemStyle = "list-style-type: none; margin-left: 0; padding: 2px 5px;";
-    const alternateRowStyle = index % 2 === 0 ? "background-color: #3a3a3a;" : "background-color: #444;"; // Alternating shades of dark gray
-    content += `<li style="${listItemStyle} ${alternateRowStyle}">${conv.label}: ${conv.time}</li>`;
+    let listItemStyle = "margin-left: 0; padding: 4px 6px;"; // Increased padding
+    const alternateRowStyle = index % 2 === 0 ? "background-color: #2c2c2c;" : "background-color: #383838;"; // More distinct dark grays
+    let borderStyle = "";
+    if (index > 0) { // Add top border to all but the first item
+      borderStyle = "border-top: 1px solid #4a4a4a;";
+    }
+    content += `<li style="${listItemStyle} ${alternateRowStyle} ${borderStyle}">${conv.label}: ${conv.time}</li>`;
   });
   content += `</ul>`;
   panel.innerHTML = content;
