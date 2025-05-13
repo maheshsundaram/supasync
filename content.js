@@ -120,9 +120,11 @@ function displayConversionResults(data, cellElement, originalText) {
   // Display UTC time formatted as YYYY-MM-DDTHH:mm:ss
   const formattedUtc = data.originalUtc.slice(0, 19);
   let content = `<strong>UTC:</strong> ${formattedUtc}<br><hr style="margin: 5px 0; border-color: #666;">`; // Darker hr
-  content += `<strong>Converted Times:</strong><ul>`;
-  data.conversions.forEach(conv => {
-    content += `<li style="list-style-type: none; margin-left: 0; padding-left: 0;">${conv.label}: ${conv.time}</li>`;
+  content += `<strong>Converted Times:</strong><ul style="padding-left: 0; margin-bottom: 0;">`; // Reset ul padding
+  data.conversions.forEach((conv, index) => {
+    const listItemStyle = "list-style-type: none; margin-left: 0; padding: 2px 5px;";
+    const alternateRowStyle = index % 2 === 0 ? "background-color: #3a3a3a;" : "background-color: #444;"; // Alternating shades of dark gray
+    content += `<li style="${listItemStyle} ${alternateRowStyle}">${conv.label}: ${conv.time}</li>`;
   });
   content += `</ul>`;
   panel.innerHTML = content;
