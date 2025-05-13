@@ -1,0 +1,31 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="64" cy="64" r="60" fill="#1A1A1A" />
+  <circle cx="64" cy="64" r="54" fill="#242933" stroke="#3ECF8E" stroke-width="2" />
+  
+  <!-- Clock Face -->
+  <circle cx="64" cy="64" r="46" fill="#2E3747" />
+  
+  <!-- Clock Ticks -->
+  <line x1="64" y1="24" x2="64" y2="30" stroke="#6E7A8A" stroke-width="2" />
+  <line x1="64" y1="98" x2="64" y2="104" stroke="#6E7A8A" stroke-width="2" />
+  <line x1="24" y1="64" x2="30" y2="64" stroke="#6E7A8A" stroke-width="2" />
+  <line x1="98" y1="64" x2="104" y2="64" stroke="#6E7A8A" stroke-width="2" />
+  
+  <!-- World Map Silhouette (simplified) -->
+  <path d="M56,48 C60,44 70,46 74,44 C78,42 84,46 88,50 C92,54 94,64 90,68 C86,72 78,76 72,78 C66,80 56,76 50,72 C44,68 48,56 56,48Z" fill="#3ECF8E" opacity="0.3" />
+  
+  <!-- Clock Hands -->
+  <line x1="64" y1="64" x2="64" y2="40" stroke="#FF3E5B" stroke-width="3" stroke-linecap="round" />
+  <line x1="64" y1="64" x2="85" y2="75" stroke="#3ECF8E" stroke-width="3" stroke-linecap="round" />
+  
+  <!-- Center Dot -->
+  <circle cx="64" cy="64" r="4" fill="#3ECF8E" />
+  
+  <!-- Timezone Symbol -->
+  <text x="64" y="95" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#FFFFFF" text-anchor="middle">UTC</text>
+  
+  <!-- Arrows indicating conversion -->
+  <path d="M40,48 L32,40 L40,32" fill="none" stroke="#FF3E5B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M88,80 L96,88 L88,96" fill="none" stroke="#3ECF8E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
